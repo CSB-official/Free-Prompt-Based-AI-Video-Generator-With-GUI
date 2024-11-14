@@ -19,6 +19,7 @@ import subprocess
 import gradio as gr
 from datetime import datetime
 import logging
+import sys
 
 # Set up logging
 logging.basicConfig(
@@ -28,24 +29,45 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def install_requirements():
-    """
-    Install required Python packages for the video generator.
-    Handles errors gracefully and provides feedback on installation status.
-    """
-    logger.info("Installing required packages...")
-    packages = [
-        "imageio[ffmpeg]",  # For video handling
-        "opencv-python",    # Image processing
-        "torch-directml",   # AMD GPU support
-        "diffusers",        # Stable Diffusion
-        "transformers",     # Model handling
-        "safetensors",     # Model weights
-        "gradio"           # UI framework
+    env_dir = Path("venv")
+    requirements = [
+        "diffusers==0.31.0",
+        "fastapi==0.115.5",
+        "gradio==5.5.0",
+        "gradio-client==1.4.2",
+        "safehttpx==0.1.1",
+        "tokenizers==0.20.3",
+        "torch-directml==0.2.5.dev240914",
+        "torchvision==0.19.1",
+        "transformers==4.46.2"
     ]
-    
-    for package in packages:
+
+    # Create virtual environment if it doesn't exist
+    if not env_dir.exists():
+        logger.info("Creating virtual environment...")
+        subprocess.run([sys.executable, "-m", "venv", str(env_dir)], check=True)
+
+    pip_executable = env_dir / "bin" / "pip" if os.name != "nt" else env_dir / "Scripts" / "pip.exe"
+
+    # Upgrade pip only if required
+    try:
+        result = subprocess.run(
+            [str(pip_executable), "--version"],
+            capture_output=True, text=True, check=True
+        )
+        installed_version = result.stdout.split()[1]
+        if installed_version < "24.3.1":
+            logger.info("Upgrading pip...")
+            subprocess.run([sys.executable, "-m", "pip", "install", "--upgrade", "pip"], check=True)
+        else:
+            logger.info("Pip is up to date.")
+    except subprocess.CalledProcessError as e:
+        logger.warning(f"Failed to upgrade pip: {str(e)}. Continuing with existing pip version.")
+
+    # Install each package in the virtual environment
+    for package in requirements:
         try:
-            subprocess.run(["pip", "install", "-q", package], check=True)
+            subprocess.run([str(pip_executable), "install", package], check=True)
             logger.info(f"Successfully installed {package}")
         except subprocess.CalledProcessError as e:
             logger.error(f"Failed to install {package}: {str(e)}")
