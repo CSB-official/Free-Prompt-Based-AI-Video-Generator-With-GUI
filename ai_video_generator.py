@@ -125,37 +125,40 @@ class VideoGenerator:
             logger.info("Successfully initialized DirectML")
 
     def _initialize_model(self):
-        """Initialize and load the new Stable Diffusion model"""
-        model_id = "stabilityai/stable-diffusion-2-1"  # New model ID
-        local_model_path = self.cache_dir / "stable-diffusion-2-1"
-
+        """Initialize and load the Stable Diffusion model"""
+        model_id = "runwayml/stable-diffusion-v1-5"
+        local_model_path = self.cache_dir / "stable-diffusion-v1-5"
+        
         try:
             if self.is_model_cached(local_model_path):
                 logger.info("Loading model from local cache...")
                 self.pipe = StableDiffusionPipeline.from_pretrained(
                     local_model_path,
-                    torch_dtype=torch.float16,  # Adjust if the new model benefits from it
+                    torch_dtype=torch.float32,
                     local_files_only=True,
                     safety_checker=None,
-                    requires_safety_checker=False
+                    requires_safety_checker=False,
+                    nsfw_filter=False
                 )
             else:
                 logger.info("Downloading model (this will be cached)...")
                 self.pipe = StableDiffusionPipeline.from_pretrained(
                     model_id,
-                    torch_dtype=torch.float16,
+                    torch_dtype=torch.float32,
                     safety_checker=None,
-                    requires_safety_checker=False
+                    requires_safety_checker=False,
+                    nsfw_filter=False
                 )
                 self.pipe.save_pretrained(local_model_path)
             
-            # Reconfigure scheduler if needed
+            # Configure pipeline settings
             self.pipe.scheduler = DPMSolverMultistepScheduler.from_config(self.pipe.scheduler.config)
             self.pipe.to(self.device)
-            logger.info("New model pipeline loaded successfully!")
-
+            self.pipe.enable_attention_slicing()
+            logger.info("Pipeline loaded successfully!")
+            
         except Exception as e:
-            logger.error(f"Error initializing new model: {str(e)}")
+            logger.error(f"Error initializing model: {str(e)}")
             raise
 
     def is_model_cached(self, path: Path) -> bool:
@@ -435,7 +438,7 @@ def main():
     try:
         ui = VideoGenerationUI()
         interface = ui.create_ui()
-        interface.launch(share=False)
+        interface.launch(share=True)
     except Exception as e:
         logger.error(f"Error launching interface: {str(e)}")
         raise
