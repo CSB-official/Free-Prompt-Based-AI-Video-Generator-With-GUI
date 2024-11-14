@@ -29,6 +29,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def install_requirements():
+    """
+    Install required Python packages for the video generator.
+    Handles errors gracefully and provides feedback on installation status.
+    """
+    
     env_dir = Path("venv")
     requirements = [
         "diffusers==0.31.0",
@@ -120,40 +125,37 @@ class VideoGenerator:
             logger.info("Successfully initialized DirectML")
 
     def _initialize_model(self):
-        """Initialize and load the Stable Diffusion model"""
-        model_id = "runwayml/stable-diffusion-v1-5"
-        local_model_path = self.cache_dir / "stable-diffusion-v1-5"
-        
+        """Initialize and load the new Stable Diffusion model"""
+        model_id = "stabilityai/stable-diffusion-2-1"  # New model ID
+        local_model_path = self.cache_dir / "stable-diffusion-2-1"
+
         try:
             if self.is_model_cached(local_model_path):
                 logger.info("Loading model from local cache...")
                 self.pipe = StableDiffusionPipeline.from_pretrained(
                     local_model_path,
-                    torch_dtype=torch.float32,
+                    torch_dtype=torch.float16,  # Adjust if the new model benefits from it
                     local_files_only=True,
                     safety_checker=None,
-                    requires_safety_checker=False,
-                    nsfw_filter=False
+                    requires_safety_checker=False
                 )
             else:
                 logger.info("Downloading model (this will be cached)...")
                 self.pipe = StableDiffusionPipeline.from_pretrained(
                     model_id,
-                    torch_dtype=torch.float32,
+                    torch_dtype=torch.float16,
                     safety_checker=None,
-                    requires_safety_checker=False,
-                    nsfw_filter=False
+                    requires_safety_checker=False
                 )
                 self.pipe.save_pretrained(local_model_path)
             
-            # Configure pipeline settings
+            # Reconfigure scheduler if needed
             self.pipe.scheduler = DPMSolverMultistepScheduler.from_config(self.pipe.scheduler.config)
             self.pipe.to(self.device)
-            self.pipe.enable_attention_slicing()
-            logger.info("Pipeline loaded successfully!")
-            
+            logger.info("New model pipeline loaded successfully!")
+
         except Exception as e:
-            logger.error(f"Error initializing model: {str(e)}")
+            logger.error(f"Error initializing new model: {str(e)}")
             raise
 
     def is_model_cached(self, path: Path) -> bool:
@@ -433,7 +435,7 @@ def main():
     try:
         ui = VideoGenerationUI()
         interface = ui.create_ui()
-        interface.launch(share=True)
+        interface.launch(share=False)
     except Exception as e:
         logger.error(f"Error launching interface: {str(e)}")
         raise
