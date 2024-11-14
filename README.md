@@ -11,8 +11,7 @@ Welcome to the AI Video Generator, a project born out of a deep fascination with
 - [🔧 Technical Details](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-technical-details)
 - [🌟 UI and UX](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-ui-and-ux)
 - [🔮 Future Work](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-future-work)
-- [📜 License](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-license)
-
+- 
 ## ✨ Key Features
 - 🎨 Text-to-video generation with Stable Diffusion
 - 🚀 AMD GPU acceleration via DirectML
