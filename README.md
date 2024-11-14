@@ -1,67 +1,60 @@
 # 🎥🤖 AI Video Generator 🌈💫
 
-The AI Video Generator is an advanced Python application that leverages state-of-the-art machine learning techniques to generate dynamic videos from textual descriptions. By harnessing the power of the Stable Diffusion model and integrating DirectML for AMD GPU acceleration, this tool pushes the boundaries of AI-driven content creation.
+![AI Video Generator GUI](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/blob/main/gui.png)
+
+Welcome to the AI Video Generator, a project born out of a deep fascination with the intersection of deep learning, computer vision, and dynamic video synthesis. This advanced Python application harnesses the power of the Stable Diffusion model and DirectML to generate stunning videos from textual descriptions.
 
 ## 📋 Table of Contents
-- [✨ Features](#features)
-- [💾 Installation](#installation)
-- [🚀 Usage](#usage) 
-- [🔧 Technical Overview](#technical-overview)
-  - [🖼️ Stable Diffusion Model](#stable-diffusion-model)
-  - [💪 DirectML Integration](#directml-integration)
-  - [🎞️ Frame Generation](#frame-generation)
-  - [📹 Video Processing](#video-processing)
-- [🌟 User Interface](#user-interface)
-- [🔮 Future Enhancements](#future-enhancements)
-- [📜 License](#license)
+- [✨ Key Features](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-key-features)
+- [💾 Installation and Setup](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-installation-and-setup)
+- [🚀 Usage](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-usage)
+- [🔧 Technical Details](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-technical-details)
+- [🌟 UI and UX](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-ui-and-ux)
+- [🔮 Future Work](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-future-work)
+- [📜 License](https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI/tree/main?tab=readme-ov-file#-license)
 
-## ✨ Features
-- 🎨 Generate compelling videos from text prompts
-- 🧠 Utilizes cutting-edge Stable Diffusion model for high-quality image synthesis
-- 🚀 Supports AMD GPUs through DirectML acceleration for improved performance
-- 🖥️ Intuitive web-based user interface built with Gradio
-- 🎛️ Customizable video parameters including frame count, dimensions, and random seed
-- 🔗 Smooth frame transitions for enhanced visual coherence
-- ⚡ Efficient model caching and resource management
+## ✨ Key Features
+- 🎨 Text-to-video generation with Stable Diffusion
+- 🚀 AMD GPU acceleration via DirectML
+- 🖥️ Intuitive Gradio-based UI
+- 🎛️ Customizable video params (frames, size, seed)
+- 🔗 Smooth frame interpolation
+- ⚡ Efficient model caching and memory usage
 
-## 💾 Installation
-1. Clone the repository:
+## 💾 Installation and Setup
+1. Clone the repo:
    ```
    git clone https://github.com/CSB-official/Free-Prompt-Based-AI-Video-Generator-With-GUI.git
    cd Free-Prompt-Based-AI-Video-Generator-With-GUI
    ```
-2. Install the required dependencies:
+2. Install dependencies:
    ```
    pip install -r requirements.txt
    ```
-   Note: The `install_requirements()` function in the code will handle installing the necessary packages automatically.
 
 ## 🚀 Usage
-To launch the AI Video Generator, run the following command:
+Launch the AI Video Generator:
 ```
 python ai_video_generator.py
 ```
-This will start the Gradio interface, which you can access through your web browser at the provided URL.
+Access the Gradio interface via the provided URL.
 
-## 🔧 Technical Overview
-### 🖼️ Stable Diffusion Model
-The AI Video Generator utilizes the Stable Diffusion v1.5 model, a state-of-the-art text-to-image generation model. Stable Diffusion is capable of producing highly detailed and coherent images from textual descriptions. The model is loaded using the `diffusers` library and can be automatically downloaded and cached locally for efficient usage.
+## 🔧 Technical Details
+- Stable Diffusion v1.5 for text-to-image synthesis
+- DirectML for AMD GPU acceleration
+- `generate_frame()` for frame generation and latent space interpolation
+- OpenCV for video processing and encoding
 
-### 💪 DirectML Integration
-To enable AMD GPU acceleration, the code integrates DirectML, a low-level API for machine learning on DirectX 12 compatible hardware. By leveraging DirectML, the video generator can significantly speed up the image generation process on supported AMD GPUs. The `torch_directml` package is used to initialize and utilize the DirectML device.
+## 🌟 UI and UX
+- Gradio-based web interface
+- Real-time frame previews
+- Seamless video download
 
-### 🎞️ Frame Generation
-The core of the video generation process lies in the `generate_frame()` method of the `VideoGenerator` class. This method takes a text prompt, frame number, total frame count, and an optional random seed as input. It then generates a single frame using the Stable Diffusion model by constructing a frame-specific prompt and running the model inference with the specified parameters.
+## 🔮 Future Work
+- 📼 More video formats and codecs
+- 🎥 Advanced frame interpolation
+- 🔊 Audio-driven video generation
+- 🎬 Real-time preview and interactive adjustments
+- 🌈 Explore other SOTA models like DALL-E, Midjourney
 
-### 📹 Video Processing
-The generated frames are processed and combined into a video using OpenCV. The `create_frame_transition()` function creates smooth transitions between consecutive frames by interpolating the pixel values. The resulting frames, along with the transitions, are then written to an MP4 video file using OpenCV's `VideoWriter` class.
-
-## 🌟 User Interface
-The AI Video Generator provides an intuitive web-based user interface built with Gradio. The interface allows users to input a text prompt, specify the desired number of frames, video dimensions, and a random seed. It also includes a live preview gallery that displays the generated frames in real-time during the video creation process. Once the video is generated, it can be viewed and downloaded directly from the interface.
-
-## 🔮 Future Enhancements
-- 📼 Support for additional video formats and codecs
-- 🎥 Integration of more advanced frame interpolation techniques for smoother transitions
-- 🔊 Option to generate videos with audio based on text prompts
-- 🎬 Implementation of real-time preview and interactive frame adjustment
-- 🌈 Exploration of other state-of-the-art text-to-image models for improved quality and diversity
+Let's push the boundaries of AI-driven video synthesis together! 🚀✨
